@@ -47,7 +47,7 @@ int main() {
 	// All possible n values and distance functions
 	int n_values[] = { 100, 1000, 10000 };
 	double (*dist_fcn_set[])(int, double[], double[])
-							= { &euclidean_dist, &cityblock_dist, &minkowski_3_dist, &prob4_dist, &cos_dist };
+							= { &euclidean_dist_squared, &cityblock_dist, &minkowski_3_dist, &prob4_dist, &cos_dist };
 
 	for (int dist_fcn_choice = 0; dist_fcn_choice <= 4; ++dist_fcn_choice) {
 		double (*dist_fcn_ptr)(int, double[], double[]) = dist_fcn_set[dist_fcn_choice];

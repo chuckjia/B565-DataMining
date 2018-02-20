@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 // Returns the Euclidean distance, i.e. 2-norm metric, between two k-dimensional vectors
-double euclidean_dist(int k, double a[], double b[]) {
+double euclidean_dist_squared(int k, double a[], double b[]) {
 	double ans = 0;
 	for (int i = 0; i < k; ++i) {
 		double x = a[i] - b[i];
