@@ -38,6 +38,7 @@ public:
 			_len = 0;
 			dp_num_array = 0;
 			dist_array = 0;
+
 			_max_dist = 0;
 			_max_index = -1;
 		}

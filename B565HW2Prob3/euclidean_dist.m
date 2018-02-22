@@ -3,7 +3,8 @@ function dist = euclidean_dist( x, y )
 %   Detailed explanation goes here
 
 diff = x - y;
-dist = sqrt(diff * diff');
+% dist = sqrt(diff * diff');
+dist = sqrt(dot(diff, diff, 2));
 
 end
 

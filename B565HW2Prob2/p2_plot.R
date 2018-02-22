@@ -1,11 +1,40 @@
-obs <- read.csv("result.csv", header = F)[,1]
+setwd("/Users/chuckjia/Documents/Workspace/Git/B565-DataMining/B565HW2Prob2"); rm(list = ls()); cat("\014")
 
-hist(obs, 
-     ylim = c(0, 2500),
-     breaks = 5000)
+num_dim = 3000
+filename_prefix = paste("uniform_results_1stTry/k_", num_dim, "_dist_", sep = "")
+x_max <- 100; y_max <- 0.45 
+plot_type = "l"  # Line: "l"; point: "p"
 
-library(MASS)
-num_dim = 3
-num_dp = 10000
-obs <- mvrnorm(num_dp, mu = rep(0, num_dim), Sigma = diag(num_dim))
-dist_matrix <- as.matrix(dist(obs))
+# ===== ===== ===== ===== ===== ===== 
+# Plotting 
+# ===== ===== ===== ===== ===== ===== 
+
+filename <- paste("p2_k_", num_dim, "_", plot_type, ".pdf", sep = "")
+pdf(filename, width = 7, height = 7)
+
+color_set <- c("darkgreen", "darkorange", "red", "blue")
+pch_set <- c(1, 2, 3, 4)
+plot_title <- paste("Results with k = ", num_dim, sep = "")
+plot(1, type = "n", main = plot_title, xlab = "Times in K Nearest Neighbor", ylab = "Frequency", xlim = c(0, x_max), ylim = c(0, y_max))
+line_width <- ifelse(plot_type == "l", 1.5, 2)
+for (dist_no in 1:4) {
+    filename <- paste(filename_prefix, dist_no, ".csv", sep = "")
+    obs <- read.csv(filename, header = F)[,1]
+    obs_vals <- sort(unique(obs)); obs_freq <- table(obs) / length(obs)
+    points(cbind(obs_vals, obs_freq), type = plot_type, pch = pch_set, lwd = line_width, col = color_set[dist_no])
+}
+
+dist_names <- c("Euclidean", "Consine", "Distance Eq. 1", "Distance Eq. 2")
+if (plot_type == "p") {
+    legend(x_max * 0.7, y_max, dist_names, pch = pch_set, pt.lwd = 3, col = color_set)
+} else
+    legend(x_max * 0.7, y_max, dist_names, lwd = 2, col = color_set)
+
+dev.off()
+
+
+# hist(obs, ylim = c(0, 3000), breaks = 5000)
+
+
+
+
