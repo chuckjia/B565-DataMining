@@ -1,0 +1,7 @@
+clear; clc;
+
+fileID = fopen("birch1.txt",'r');
+A = fscanf(fileID, "%f");
+fclose(fileID);
+
+[nrow, ncol] = size(A);
