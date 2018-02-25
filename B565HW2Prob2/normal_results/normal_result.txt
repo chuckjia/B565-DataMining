@@ -1,0 +1,67 @@
+[Computing with NORMAL random number generator]
+
+>> Working on k = 3, with distance function no. 1
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 2.39s
+
+>> Working on k = 3, with distance function no. 2
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 2.24s
+
+>> Working on k = 3, with distance function no. 3
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 2.32s
+
+>> Working on k = 3, with distance function no. 4
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 2.34s
+
+>> Working on k = 30, with distance function no. 1
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 2.78s
+
+>> Working on k = 30, with distance function no. 2
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 3.65s
+
+>> Working on k = 30, with distance function no. 3
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 5.50s
+
+>> Working on k = 30, with distance function no. 4
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 7.77s
+
+>> Working on k = 300, with distance function no. 1
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 16.01s
+
+>> Working on k = 300, with distance function no. 2
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 16.96s
+
+>> Working on k = 300, with distance function no. 3
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 34.86s
+
+>> Working on k = 300, with distance function no. 4
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 55.59s
+
+>> Working on k = 3000, with distance function no. 1
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 144.04s
+
+>> Working on k = 3000, with distance function no. 2
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 149.65s
+
+>> Working on k = 3000, with distance function no. 3
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 338.14s
+
+>> Working on k = 3000, with distance function no. 4
+Distance Progress: 0% | 10% | 20% | 30% | 40% | 50% | 60% | 70% | 80% | 90% | 100%
+Time used = 522.47s
+
+>> Time used in total= 1307.34s
