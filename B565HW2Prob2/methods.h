@@ -124,14 +124,14 @@ TwoDimArray<double> get_dist_matrix(int n, int k, double (*dist_fcn)(int, double
 TwoDimArray<bool> find_neighbors(const TwoDimArray<double> &dist_mat, int num_neigh) {
 	int n = dist_mat.nrow();
 	TwoDimArray<bool> ans(n, n);
-	memset(ans.data_ptr(), 0, sizeof(bool) * n * n);  // Set all elements to be false
+	memset(ans.dataPtr(), 0, sizeof(bool) * n * n);  // Set all elements to be false
 
 	for (int i = 0; i < n; ++i) {
-		NearestNeighbors nb(num_neigh);
+		SmallestMembers nb(num_neigh);
 		for (int j = 0; j < n; ++j)
 			nb.add(j, dist_mat[i][j]);
 
-		int *nb_index_arr = nb.dp_num_ptr();  // Data points
+		int *nb_index_arr = nb.dpIdArrPtr();  // Data points
 		for (int j = 0; j < num_neigh; ++j)
 			ans[i][nb_index_arr[j]] = true;
 	}

@@ -7,90 +7,90 @@
 
 #include <limits>
 
-class NearestNeighbors {
+class SmallestMembers {
 public:
 
 	/* ===== ===== ===== ===== ===== ===== ===== =====
 	 * Constructors
 	 * ===== ===== ===== ===== ===== ===== ===== ===== */
 
-	NearestNeighbors() {
-		_len = 0;
-		dist_array = 0;
-		dp_num_array = 0;
+	SmallestMembers() {
+		len_ = 0;
+		dist_arr_ = 0;
+		dp_id_arr_ = 0;
 
-		_max_dist = 0;
-		_max_index = -1;
+		max_dist_ = 0;
+		max_index_ = -1;
 	}
 
-	NearestNeighbors(int len) {
+	SmallestMembers(int len) {
 		if (len > 0) {
-			_len = len;
-			dist_array = new double[len];
-			dp_num_array = new int[len];
+			len_ = len;
+			dist_arr_ = new double[len];
+			dp_id_arr_ = new int[len];
 
 			double max_double = std::numeric_limits<double>::max();
 			for (int i = 0; i < len; ++i)
-				dist_array[i] = max_double;
-			_max_dist = max_double;
-			_max_index = 0;
+				dist_arr_[i] = max_double;
+			max_dist_ = max_double;
+			max_index_ = 0;
 		} else {
-			_len = 0;
-			dp_num_array = 0;
-			dist_array = 0;
+			len_ = 0;
+			dp_id_arr_ = 0;
+			dist_arr_ = 0;
 
-			_max_dist = 0;
-			_max_index = -1;
+			max_dist_ = 0;
+			max_index_ = -1;
 		}
 	}
 
 	void add(int dp_num, double dist) {
-		if (dist >= _max_dist)
+		if (dist >= max_dist_)
 			return;
 
-		dist_array[_max_index] = dist;
-		dp_num_array[_max_index] = dp_num;
-		recalc_max();
+		dist_arr_[max_index_] = dist;
+		dp_id_arr_[max_index_] = dp_num;
+		recalcMax();
 	}
 
-	inline int* dp_num_ptr() { return dp_num_array; }
-	inline int length() { return _len; }
+	inline int* dpIdArrPtr() { return dp_id_arr_; }
+	inline int length() { return len_; }
 
 	/* ===== ===== ===== ===== ===== ===== ===== =====
 	 * Destructor
 	 * ===== ===== ===== ===== ===== ===== ===== ===== */
 
-	~NearestNeighbors() {
-		if (dp_num_array) {
-			delete[] dp_num_array;
-			delete[] dist_array;
+	~SmallestMembers() {
+		if (dp_id_arr_) {
+			delete[] dp_id_arr_;
+			delete[] dist_arr_;
 
-			dp_num_array = 0;
-			dist_array = 0;
+			dp_id_arr_ = 0;
+			dist_arr_ = 0;
 		};
 	}
 
 protected:
 
-	void recalc_max() {
+	void recalcMax() {
 		double max_dist = 0;
 		int max_index = 0;
-		for (int i = 0; i < _len; ++i)
-			if (dist_array[i] > max_dist) {
-				max_dist = dist_array[i];
+		for (int i = 0; i < len_; ++i)
+			if (dist_arr_[i] > max_dist) {
+				max_dist = dist_arr_[i];
 				max_index = i;
 			}
 
-		_max_dist = max_dist;
-		_max_index = max_index;
+		max_dist_ = max_dist;
+		max_index_ = max_index;
 	}
 
-	int _len;
-	int *dp_num_array;  // The array of data point numbers
-	double *dist_array;  // The array of distances
+	int len_;
+	int *dp_id_arr_;  // The array of data point numbers
+	double *dist_arr_;  // The array of distances
 
-	double _max_dist;
-	int _max_index;
+	double max_dist_;
+	int max_index_;
 };
 
 

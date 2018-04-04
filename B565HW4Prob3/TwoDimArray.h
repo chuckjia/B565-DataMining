@@ -8,8 +8,8 @@
 #ifndef TWODIMARRAY_H_
 #define TWODIMARRAY_H_
 #include <assert.h>
-#include <string.h>
-// using namespace std;
+#include <string>
+using namespace std;
 
 template<class T> class TwoDimArray {
 public:
