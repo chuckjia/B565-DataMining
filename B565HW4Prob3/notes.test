@@ -1,0 +1,15 @@
+Naive
+- Best with 1000 neighbors: score = 0.811239
+
+u3 with distFcn1
+- Best with 47 neighbors: score = 0.797715
+
+U3 with distFcn7
+- Best with 31 neighbors: score = 0.792100 - With no /count
+
+- Best with 22 neighbors: score = 0.767079
+
+Check:
+1. Only pass references of objects, not objects themselves!
+
+2. Memcpy and memset use the correct data type in sizeof(type)!

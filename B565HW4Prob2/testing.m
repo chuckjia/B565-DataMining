@@ -7,11 +7,10 @@ dset = [1 1 0 0 0 0;
     1 1 1 0 0 1]
 
 tic
-cand = apriori(dset, 0.5);
+cand = apriori_freqset(dset, 0.5, 1);
 toc
 
-cand{1}
-cand{2}
+printFreqsets(cand);
 
 
 %% 
@@ -96,16 +95,38 @@ c(2) = []
 
 
 
+%%
+
+clear; clc
+tic
+n = 3;
+if (n == 2)
+    cand = 1;
+else
+    cand = 2;
+end
+cand
+toc
+
+%%
+
+clear; clc
+
+rules = cell(1, 3)
+
+rules{1} = {1, 2}
 
 
+%% 
+
+a = [1, 2, 3, 4; 4, 5, 6, 7; 2, 3, 4, 5; 1, 0, 0, 0]
+a(2:3, 2:3)
 
 
-
-
-
-
-
-
+%%
+for i = 1:-2
+    x = 1
+end
 
 
 

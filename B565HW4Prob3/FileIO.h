@@ -7,88 +7,7 @@
 
 #ifndef FILEIO_H_
 #define FILEIO_H_
-
-#include <vector>
-#include "TwoDimArray.h"
-#include "time.h"
-#include "assert.h"
-#include "limits.h"
-
-/* ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
- * Testing
- * ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
-
-void tm() {
-	printf("\n>> Program passed here.\n\n");
-}
-
-void tm(int i) {
-	printf("\n>> Index = %d\n", i);
-}
-
-void tm(double i) {
-	printf("\n>> Index = %f\n", i);
-}
-
-void tm(int i, string s) {
-	printf("\n>> %s = %d\n\n", s.c_str(), i);
-}
-
-void tm(double i, string s) {
-	printf("\n>> %s = %f\n\n", s.c_str(), i);
-}
-
-void printToFile(TwoDimArray<int> &input, string filename) {
-	int nrow = input.nrow(), ncol = input.ncol();
-
-	FILE *f = fopen(filename.c_str(), "wb");
-	for (int i = 0; i < nrow; ++i) {
-		for (int j = 0; j < ncol; ++j)
-			fprintf(f, "%d,", input[i][j]);
-		fprintf(f, "\n");
-	}
-	fclose(f);
-}
-
-void printToConsole(vector<double> &v) {
-	int n = v.size();
-	for (int i = 0; i < n; ++i)
-		printf("Element %d: %1.2f\n", i + 1, v[i]);
-}
-
-void printToConsole(TwoDimArray<int> &arr) {
-	int nrow = arr.nrow(), ncol = arr.ncol();
-	for (int i = 0; i < nrow; ++i) {
-		for (int j = 0; j < ncol; ++j)
-			printf("%d ", arr[i][j]);
-		printf("\n");
-	}
-}
-
-void printToConsole(TwoDimArray<bool> &arr) {
-	int nrow = arr.nrow(), ncol = arr.ncol();
-	for (int i = 0; i < nrow; ++i) {
-		for (int j = 0; j < ncol; ++j)
-			printf("%d ", arr[i][j]);
-		printf("\n");
-	}
-}
-
-void printToConsole(int k, int* arr) {
-	printf("[ ");
-	int last = k - 1;
-	for (int i = 0; i < last; ++i)
-		printf("%d, ", arr[i]);
-	printf("%d ]\n", arr[last]);
-}
-
-void printToConsole(int k, bool* arr) {
-	printf("[ ");
-	int last = k - 1;
-	for (int i = 0; i < last; ++i)
-		printf("%d, ", arr[i]);
-	printf("%d ]\n", arr[last]);
-}
+#include "Testing.h"
 
 /* ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
  * 100K Data Set File I/O
@@ -96,19 +15,20 @@ void printToConsole(int k, bool* arr) {
 
 // Count number of lines in source file from the 100K data set
 int getNumLine(string filename) {
+	clock_t start = clock();
 	FILE *f = fopen(filename.c_str(), "r");
 	if (f == NULL) {
-		perror("File read failed in the function readCSV");
+		perror("File read failed in the function getNumLine");
 		exit(2);
 	}
 	int num_line = 0;
 	while (true) {
-		int a, b, c;
-		int res = fscanf(f, "%d\t%d\t%d\t%*d", &a, &b, &c);
-		if (res != 3) break;
+		int res = fscanf(f, "%*d%*[^\n]");
+		if (res != 0) break;
 		++num_line;
 	}
 	fclose(f);
+	printf("\n>> Time used on counting lines: %1.2f ms.\n", (double)(clock() - start) / CLOCKS_PER_SEC * 1000);
 	return num_line;
 }
 
@@ -148,26 +68,15 @@ TwoDimArray<int> readCSV(string filename) {
  * 10M Data Set File I/O
  * ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
 
-// Count the number of lines in CSV file from the 10M data set
-int getNumLine2(string filename) {
-	FILE *f = fopen(filename.c_str(), "r");
-	int num_line = 0;
-	while (true) {
-		int a, b;
-		double c;
-		int res = fscanf(f, "%d::%d::%lf::%*d", &a, &b, &c);
-		if (res != 3) break;
-		++num_line;
-	}
-	fclose(f);
-	return num_line;
-}
-
 TwoDimArray<int> readCSV2(string filename, int num_line) {
 	clock_t start = clock();
 
 	TwoDimArray<int> ans(num_line, 3);
 	FILE *f = fopen(filename.c_str(), "r");
+	if (f == NULL) {
+		perror("File read failed in the function readCSV2");
+		exit(2);
+	}
 
 	for (int i = 0; i < num_line; ++i) {
 		int a, b;
@@ -179,46 +88,153 @@ TwoDimArray<int> readCSV2(string filename, int num_line) {
 	}
 
 	fclose(f);
-	printf("\n>> Time used on reading CSV file = %1.6f seconds.\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+	printf("\n>> Time used on reading CSV file (10M data set): %1.2f ms.\n", (double)(clock() - start) / CLOCKS_PER_SEC * 1000);
 	return ans;
 }
 
 TwoDimArray<int> readCSV2(string filename) {
-	return readCSV2(filename, getNumLine2(filename));
+	return readCSV2(filename, getNumLine(filename));
 }
 
-vector<int> renameUserID(TwoDimArray<int> raw_data) {
-	int nrow = raw_data.nrow(), maxID = 0;
-	for (int i = 0; i < nrow; ++i) {
-		int id = raw_data[i][0];
-		maxID = id > maxID ? id : maxID;
-	}
-	printf("Max ID = %d\n", maxID);
+/* ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+ * Create ID Maps and Map IDs
+ * ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
 
-	vector<int> ans(maxID, -1);
-	int orig_id = 0, new_id = -1;
-	for (int i = 0; i < nrow; ++i) {
-		int id = raw_data[i][0];
-		if (id > orig_id) {
-			orig_id = id;
+/*
+ * For 100K data sets
+ */
+vector<int> generateIdMap(int n) {
+	vector<int> id_map(n + 1);
+	for (int i = 0; i <= n; ++i)
+		id_map[i] = i - 1;
+	return id_map;
+}
+
+/*
+ * For 10M data sets
+ */
+
+int maxIn1stCol(string filename) {
+	clock_t start = clock();
+
+	FILE *f = fopen(filename.c_str(), "r");
+	if (f == NULL) {
+		perror("File read failed in the function maxIn1stCol");
+		exit(2);
+	}
+	int max_id = 0;
+	while (true) {
+		int id;
+		int res = fscanf(f, "%d%*[^\n]", &id);
+		if (res != 1) break;
+		max_id = id > max_id ? id : max_id;
+	}
+	fclose(f);
+
+	printf("\n>> Time used on finding max value in 1st column: %1.2f ms.\n", (double)(clock() - start) / CLOCKS_PER_SEC * 1000);
+	return max_id;
+}
+
+// Assume original IDs are all >= 1, all integers
+vector<int> generateUserIdMap(string filename, int max_id) {
+	clock_t start = clock();
+
+	FILE *f = fopen(filename.c_str(), "r");
+	if (f == NULL) {
+		perror("File read failed in the function generateUserIdMap");
+		exit(2);
+	}
+
+	vector<int> id_map(max_id + 1, -1);
+
+	int new_id = -1, old_id = -1;
+	while (true) {
+		int id;
+		int res = fscanf(f, "%d%*[^\n]", &id);
+		if (res != 1) break;
+		if (id != old_id) {
 			++new_id;
-			ans[id] = new_id;
+			old_id = id;
+			id_map[id] = new_id;
 		}
 	}
-	return ans;
+
+	fclose(f);
+	printf("\n>> Time used on generating user id map: %1.2f ms.\n", (double)(clock() - start) / CLOCKS_PER_SEC * 1000);
+	return id_map;
 }
 
-void renameMovieID(string filename) {
-	FILE *f = fopen(filename.c_str(), "r");
-	int num_line = 0;
-	while (true) {
-		int a;
-		int res = fscanf(f, "%d::%*[^\n]", &a);
-		if (res != 1) break;
-		++num_line;
+vector<int> generateUserIdMap(string filename) {
+	return generateUserIdMap(filename, maxIn1stCol(filename));
+}
+
+vector<int> generateItemIdMap(string movie_filename, int max_id) {
+	clock_t start = clock();
+	vector<int> itemid_map(max_id + 1, -1);
+
+	FILE *f = fopen(movie_filename.c_str(), "r");
+	if (f == NULL) {
+		perror("File read failed in the function generateItemIdMap");
+		exit(2);
 	}
-	printf("%d", num_line);
+
+	int index = -1;
+	while (true) {
+		int itemid;
+		int res = fscanf(f, "%d%*[^\n]", &itemid);
+		if (res != 1) break;
+		++index;
+		itemid_map[itemid] = index;
+	}
 	fclose(f);
+
+	printf("\n>> Time used on generating item id map: %1.2f ms.\n", (double)(clock() - start) / CLOCKS_PER_SEC * 1000);
+	return itemid_map;
+}
+
+vector<int> generateItemIdMap(string movie_filename) {
+	return generateItemIdMap(movie_filename, maxIn1stCol(movie_filename));
+}
+
+vector<int> generateItemIdMap2(string movie_filename, int max_id) {
+	clock_t start = clock();
+
+	FILE *f = fopen(movie_filename.c_str(), "r");
+	if (f == NULL) {
+		perror("File read failed in the function generateItemIdMap");
+		exit(2);
+	}
+
+	vector<int> itemid_map(max_id + 1, -1);
+
+	int new_id = -1;
+	while (true) {
+		int id;
+		int res = fscanf(f, "%*d::%d%*[^\n]", &id);
+		if (res != 1) break;
+		if (itemid_map[id] == -1) {
+			++new_id;
+			itemid_map[id] = new_id;
+		}
+	}
+
+	fclose(f);
+
+	printf("\n>> Time used on generating item id map: %1.2f ms.\n", (double)(clock() - start) / CLOCKS_PER_SEC * 1000);
+	return itemid_map;
+}
+
+/*
+ * For both 100K and 10M data sets
+ */
+
+void mapId(TwoDimArray<int> &raw_data, vector<int> userid_map, vector<int> itemid_map) {
+	int nrow = raw_data.nrow();
+	for (int row = 0; row < nrow; ++row) {
+		int user = raw_data[row][0], item = raw_data[row][1];
+		raw_data[row][0] = userid_map[user];
+		raw_data[row][1] = itemid_map[item];
+	}
 }
 
 #endif /* FILEIO_H_ */

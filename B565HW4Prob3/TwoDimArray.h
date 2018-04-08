@@ -8,6 +8,7 @@
 #ifndef TWODIMARRAY_H_
 #define TWODIMARRAY_H_
 #include <assert.h>
+#include <cstring>
 #include <string>
 using namespace std;
 

@@ -1,0 +1,23 @@
+function [ output_args ] = ap_genrules( freqSet, H )
+%AP_GENRULES Summary of this function goes here
+%   Detailed explanation goes here
+
+k = length(freqSet);
+m = length(H{1});
+H_size = length(H);
+
+if k > m + 1
+    
+    candSet = cell(1, H_size * H_size);
+    equal_size = H_size - 1;
+    
+    for i = 1:F_prev_size
+        for j = (i+1):F_prev_size
+            
+        end
+    end
+    
+end
+
+end
+
