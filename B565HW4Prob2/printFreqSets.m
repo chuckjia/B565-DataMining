@@ -1,4 +1,4 @@
-function printFreqsets( F )
+function printFreqSets( F )
 %PRINTFREQSETS Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -9,7 +9,9 @@ for lev = 1:numLev
     numSet = length(F{lev});
     fprintf("\n- Level %d: \n", lev);
     for setNo = 1:numSet
-        display(F{lev}{setNo});
+        fprintf("    [ ");
+        fprintf("%d ", F{lev}{setNo});
+        fprintf("]\n");
     end
 end
 

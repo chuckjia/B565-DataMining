@@ -1,27 +1,29 @@
-function H_new = ap_genrules( freqSet, H )
+function ap_genrules( F, suppCountCache, lev, freqSetNo, H, dset, minconf, itemNames )
 %AP_GENRULES Summary of this function goes here
 %   Detailed explanation goes here
 
-k = length(freqSet);
 m = length(H{1});
-H_size = length(H);
 
-if k > m + 1
+if (lev > m + 1)
+    H_new = apriori_gen_2(H);
+    H_new_size = length(H_new);
+    H_select = repmat(true, H_new_size, 1);
     
-    H_new = cell(1, H_size * H_size);
-    equal_size = m - 1;
-    candNo = 0;
-    for i = 1:H_size
-        for j = (i+1):H_size
-            if (H{i}(m) ~= H{j}(m) && isequal(H{i}(1:equal_size), H{j}(1:equal_size)))
-                candNo = candNo + 1;
-                H_new{candNo} = union(H{i}, H{j});
-            end
+    for setNo = 1:H_new_size
+        itemset = setdiff(F{lev}{freqSetNo}, H_new{setNo});
+        suppCount = suppCountCache{lev}{freqSetNo};
+        conf =  suppCount / calcSuppCount(dset, itemset);
+        
+        if conf >= minconf
+            printRule(itemset, H_new{setNo}, suppCount / length(dset), conf, itemNames);
+        else
+            H_select(setNo) = false;
         end
     end
     
-    H_new = H_new(1:candNo);
-    
+    if (nnz(H_select) > 0)
+        ap_genrules(F, suppCountCache, lev, freqSetNo, H_new(H_select), dset, minconf, itemNames);
+    end
 end
 
 end

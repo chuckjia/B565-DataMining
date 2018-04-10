@@ -1,0 +1,8 @@
+Car:
+https://archive.ics.uci.edu/ml/datasets/car+evaluation
+
+Nursery:
+https://archive.ics.uci.edu/ml/datasets/Nursery
+
+Mushroom:
+https://archive.ics.uci.edu/ml/datasets/Mushroom

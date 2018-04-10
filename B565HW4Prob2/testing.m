@@ -1,19 +1,20 @@
 clear; clc
 
-dset = [1 1 0 0 0 0;
+dset = ...
+    [1 1 0 0 0 0;
     1 0 1 1 1 0;
     0 1 1 1 0 1;
     1 1 1 1 0 0;
     1 1 1 0 0 1]
 
 tic
-cand = apriori_freqset(dset, 0.5, 1);
+cand = apriori(dset, 1, 0.2, 0);
 toc
 
-printFreqsets(cand);
+printFreqSets(cand);
 
 
-%% 
+%%
 clear; clc
 
 tic
@@ -28,7 +29,7 @@ toc
 
 
 
-%% 
+%%
 clear; clc
 
 tic
@@ -43,7 +44,7 @@ toc
 
 
 
-%% 
+%%
 clear; clc
 
 tic
@@ -53,7 +54,7 @@ toc
 
 
 
-%% 
+%%
 clear; clc
 
 tic
@@ -70,7 +71,7 @@ toc
 %%
 
 for i = [3,5,6,9]
-   i 
+    i
 end
 
 
@@ -117,7 +118,7 @@ rules = cell(1, 3)
 rules{1} = {1, 2}
 
 
-%% 
+%%
 
 a = [1, 2, 3, 4; 4, 5, 6, 7; 2, 3, 4, 5; 1, 0, 0, 0]
 a(2:3, 2:3)
@@ -129,22 +130,68 @@ for i = 1:-2
 end
 
 
+%%
+clear; clc
+
+a = cell(1,100);
+a{1} = [1,2];
+a{2} = [3,4];
+endval = 4;
+
+tic
+for i = 1:1e6
+    a = cell(1,100);
+    a(1:50)=[];
+end
+toc
+
+%%
+
+clc
+a = [1, 0; 0, 1; 1, 1]
+all(a, 2)
+
+
+%%
+clear; clc
+
+rules = cell(1, 3);
+
+rules{1} = {1, 2};
+rules{2} = {3, 5, 7};
+rules{3} = {2, 3};
+
+printFreqSets(rules);
+
+rules = rules([true, false, true])
+printFreqSets(rules);
 
 
 
 
 
+%%
+clc
+dset = csvread("car_dv.csv"); 
+
+load Karate
+apriori(dset, 2, 0.1, 0.7);
+
+minSup = 0.1;
+minConf = 0.7;
+nRules = 100;
+sortFlag = 1;
+fname = 'car';
+for s = 1:size(dset, 2)
+    labels{s} = [num2str(s)];
+end
+[Rules FreqItemsets] = findRules(dset, minSup, minConf, nRules, sortFlag, labels, fname);
 
 
-
-
-
-
-
-
-
-
-
+%%
+clear; clc
+dset = csvread("car_dv.csv"); 
+apriori(dset, 1, 0.2, 0.5);
 
 
 

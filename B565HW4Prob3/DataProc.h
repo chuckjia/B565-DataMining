@@ -41,15 +41,17 @@ TwoDimArray<double> calcUserDissim(TwoDimArray<double> &train, double (*dist_fcn
 	for (int i = 0; i < num_user; ++i)
 		ans[i][i] = max_double;
 
-	printf("\n>> Calculating dissimilarity matrix:\n");
+	printf("\n>> Calculating dissimilarity matrix: ");
+	printf("size (%d, %d)\n", ans.nrow(), ans.ncol());
 
 	clock_t start_loop = clock();
-	double total_num_calc_inv = 1. / (num_user * num_user);
+	double total_num_calc_inv = 1. / ((double) num_user * (double) num_user);
 
 	for (int i = 0; i < num_user; ++i) {
-		if (i % 8 == 1) {
-			double prog_ratio =  (2 * num_user - i - 2) * (i + 1) * total_num_calc_inv;
-			printf("\r  - Dissimilarity progress: %1.4f%%. | ", prog_ratio * 100);
+		if (i % 32 == 1) {
+			double num_user_left = num_user - i;
+			double prog_ratio = 1 - num_user_left * num_user_left * total_num_calc_inv;
+			printf("\r  - Dissimilarity progress: %1.4f%% (i = %d). | ", prog_ratio * 100, i);
 			double time_left = (double)(clock() - start_loop) / CLOCKS_PER_SEC * (1 / prog_ratio - 1);
 			printf("Estimated time left: %1.6fs", time_left);
 			fflush(stdout);
@@ -62,7 +64,7 @@ TwoDimArray<double> calcUserDissim(TwoDimArray<double> &train, double (*dist_fcn
 		}
 	}
 
-	printf("\n>> Time used on calculating disimilarity matrix: %1.2f ms.\n", (double)(clock() - start) / CLOCKS_PER_SEC * 1000);
+	printf("\n>> Time used on calculating disimilarity matrix: %1.2f s.\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 	return ans;
 }
 
@@ -75,9 +77,19 @@ TwoDimArray<bool> createWatchRecord(TwoDimArray<double> &train) {
 	return watch_record;
 }
 
+int calcDefaultVal(TwoDimArray<int> &train_raw) {
+	int num_entry = train_raw.nrow();
+	double default_val = 0.;
+	for (int i = 0; i < num_entry; ++i)
+		default_val += train_raw[i][2];
+	default_val /= num_entry;
+	return (int) default_val;
+}
+
+
+// Note that default_val here is an int. This is intentional, as from experiment results, int would give better results.
 vector<double> predict(TwoDimArray<double> &train, TwoDimArray<int> &raw_test,
-		TwoDimArray<double> &user_dissim, TwoDimArray<bool> &watch_record,
-		int num_neighbor, int default_val) {
+		TwoDimArray<double> &user_dissim, TwoDimArray<bool> &watch_record, int num_neighbor, int default_val) {
 	clock_t start = clock();
 
 	int num_user = train.nrow();
@@ -111,11 +123,11 @@ vector<double> predict(TwoDimArray<double> &train, TwoDimArray<int> &raw_test,
 	return pred_result;
 }
 
-vector<double> predict(TwoDimArray<double> &train, TwoDimArray<int> &test,
+vector<double> predict(TwoDimArray<double> &train, TwoDimArray<int> &test_raw,
 		double (*dist_fcn)(int, double*, double*), int num_neighbor, int default_val) {
 	TwoDimArray<double> user_dissim = calcUserDissim(train, dist_fcn);
 	TwoDimArray<bool> watch_record = createWatchRecord(train);
-	return predict(train, test, user_dissim, watch_record, num_neighbor, default_val);
+	return predict(train, test_raw, user_dissim, watch_record, num_neighbor, default_val);
 }
 
 vector<double> predict(TwoDimArray<double> &train, TwoDimArray<int> &test, double (*dist_fcn)(int, double*, double*),
@@ -131,6 +143,40 @@ double evaluate(vector<double> &pred, TwoDimArray<int> &test) {
 		ans += fabs(pred[i] - test[i][2]);
 
 	return ans / n;
+}
+
+vector<double> naivePredict(TwoDimArray<double> &train, TwoDimArray<int> &test_raw,
+		TwoDimArray<bool> &watch_record, int default_val) {
+	int nrow_test = test_raw.nrow(),
+			num_user = train.nrow(), num_item = train.ncol();
+	vector<double> pred_cache(num_item, -1);
+	vector<double> pred_result(nrow_test);
+
+	for (int row = 0; row < nrow_test; ++row) {
+		int itemid = test_raw[row][1];
+		if (pred_cache[itemid] > 0)
+			pred_result[row] = pred_cache[itemid];
+		else {
+
+			double pred_rating = 0;
+			bool* watched_this = watch_record[itemid];
+			int num_user_watched_this = 0;
+			for (int i = 0; i < num_user; ++i) {
+				bool watched_or_not = watched_this[i];
+				num_user_watched_this += watched_or_not ? 1 : 0;
+				pred_rating += watched_or_not ? train[i][itemid] : 0;
+			}
+			if (num_user_watched_this > 0)
+				pred_rating /= num_user_watched_this;
+			else
+				pred_rating = default_val;
+			pred_result[row] = pred_rating;
+			pred_cache[itemid] = pred_rating;
+
+		}
+	}
+
+	return pred_result;
 }
 
 #endif /* DATAPROC_H_ */
