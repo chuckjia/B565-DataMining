@@ -96,6 +96,21 @@ double cosDist(int k, double* a, double* b) {
 	return count ? 1 - dot_prod / sqrt(a_len * b_len) : 2;
 }
 
+// Returns the cosine distance between two k-dimensional vectors, i.e. d(x,y) = 1 - cos(x,y)
+double cosDist_unnormalized(int k, double* a, double* b) {
+	double dot_prod = 0, a_len = 0, b_len = 0;
+	int count = 0;
+	for (int i = 0; i < k; ++i) {
+		double aval = a[i], bval = b[i];
+		bool isused = aval > 0 && bval > 0;
+		dot_prod += aval * bval;
+		a_len += aval * aval;
+		b_len += bval * bval;
+		count += isused;
+	}
+	return count ? 1 - dot_prod / sqrt(a_len * b_len) : 2;
+}
+
 
 
 #endif /* DISTFCN_H_ */

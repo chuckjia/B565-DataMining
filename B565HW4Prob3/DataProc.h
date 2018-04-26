@@ -21,7 +21,6 @@ TwoDimArray<double> preprocTrain(int num_user, int num_item, TwoDimArray<int> &r
 
 	int nrow = raw_train.nrow();
 	for (int i = 0; i < nrow; ++i) {
-		// if (i % 1000000 == 0) printf("Preprocessing %1.2f%%\n", double(i) / nrow * 100);
 		int user = raw_train[i][0], item = raw_train[i][1], rating = raw_train[i][2];
 		train[user][item] = (double) rating;
 	}
@@ -64,8 +63,32 @@ TwoDimArray<double> calcUserDissim(TwoDimArray<double> &train, double (*dist_fcn
 		}
 	}
 
-	printf("\n>> Time used on calculating disimilarity matrix: %1.2f s.\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+	printf("\n>> Time used on calculating dissimilarity matrix: %1.2f s.\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 	return ans;
+}
+
+double calcUserDemographyDist(int* x, int* y) {
+	int age_diff = x[1] - y[1];
+	age_diff = age_diff >= 0 ? age_diff : (-age_diff);
+	bool gender_diff = (x[2] == y[2]);
+	return 0.005 * age_diff + 0.0034 * gender_diff;  // mink1
+	// return 9.29e-6 * age_diff + 1.5e-6 * gender_diff;  // mink2
+	// return -3e-5 * age_diff + 3e-5 * gender_diff;  // Cosine
+}
+
+TwoDimArray<double> calcUserDissim(TwoDimArray<double> &train, double (*dist_fcn)(int, double*, double*),
+		TwoDimArray<int> &user_demography) {
+
+	TwoDimArray<double> user_dissim = calcUserDissim(train, dist_fcn);
+	int num_user = user_demography.nrow();
+	for (int i = 0; i < num_user; ++i) {
+		for (int j = i + 1; j < num_user; ++j) {
+			double demo_dist = calcUserDemographyDist(user_demography[i], user_demography[j]);
+			user_dissim[i][j] += demo_dist;
+			user_dissim[j][i] += demo_dist;
+		}
+	}
+	return user_dissim;
 }
 
 TwoDimArray<bool> createWatchRecord(TwoDimArray<double> &train) {
@@ -85,7 +108,6 @@ int calcDefaultVal(TwoDimArray<int> &train_raw) {
 	default_val /= num_entry;
 	return (int) default_val;
 }
-
 
 // Note that default_val here is an int. This is intentional, as from experiment results, int would give better results.
 vector<double> predict(TwoDimArray<double> &train, TwoDimArray<int> &raw_test,

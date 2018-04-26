@@ -45,7 +45,7 @@ write.table(names(new_dset), file = "data/nursery_dv_names.csv", row.names = F, 
 dset <- read.csv("data/mushroom.data", header = F)
 dset <- dset[,1:9]
 
-names(dset) <- c("cap_shape", "cap_surface", "cap_color", "bruises", "odor", "gill_attachment", "gill_spacing", "gill_size", "gill_color")
+names(dset) <- c("edible", "cap_shape", "cap_surface", "cap_color", "bruises", "odor", "gill_attachment", "gill_spacing", "gill_size")
 new_dset <- genDummyVariable(dset)
 
 write.table(new_dset, file = "data/mushroom_dv.csv", row.names = F, col.names = F, sep = ",")
@@ -53,9 +53,10 @@ write.table(names(new_dset), file = "data/mushroom_dv_names.csv", row.names = F,
 
 
 
+#naive 100k
+(0.827146 + 0.820011 + 0.811239 + 0.810707 + 0.815414) / 5
 
-
-
-
+#naive 10m
+(1.479261 + 1.473021 + 1.474050 + 1.480613 + 1.473891) / 5 / 2
 
 

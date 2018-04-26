@@ -64,6 +64,26 @@ TwoDimArray<int> readCSV(string filename) {
 	return readCSV(filename, getNumLine(filename));
 }
 
+TwoDimArray<int> readUserDemography_100k(string filename, int num_line) {
+	TwoDimArray<int> user_demography(num_line, 3);
+	FILE *f = fopen(filename.c_str(), "r");
+
+	for (int row = 0; row < num_line; ++row) {
+		int a, b, c;  // UserID, Age, Gender (M = 0, F = 1)
+		fscanf(f, "%d,%d,%d", &a, &b, &c);
+		user_demography[row][0] = a - 1;
+		user_demography[row][1] = b;
+		user_demography[row][2] = c;
+	}
+
+	fclose(f);
+	return user_demography;
+}
+
+TwoDimArray<int> readUserDemography_100k(string filename) {
+	return readUserDemography_100k(filename, 943);
+}
+
 /* ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
  * 10M Data Set File I/O
  * ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== */
