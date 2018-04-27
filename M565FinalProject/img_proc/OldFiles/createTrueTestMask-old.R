@@ -1,15 +1,14 @@
 rm(list = ls())
 cat("\014")
 
-install.packages("png")
+# install.packages("png")
 library("png")
 
-outerFolder <- '/home/iu_ai_club/Documents/chuckjia/datamining/data/stage1_test_svm';
-groundTruthFile <- '/home/iu_ai_club/Documents/chuckjia/datamining/data/stage1_test_groundtruth/stage1_solution.csv';
-createTrueTestMask(outerFolder, groundTruthFile)
+outerFolder <- '/Users/chuckjia/Documents/Workspace/DataStorage/B565/stage1_test';
+groundTrueFile <- '/Users/chuckjia/Documents/Workspace/DataStorage/B565/stage1_solution.csv';
 
 createTrueTestMask <- function(outerFolder, groundTrueFile) {
-    dset <- read.csv(groundTrueFile)
+    dset <- read.csv(inputFile)
     ndpt <- nrow(dset)
     
     prevFolder <- ''
