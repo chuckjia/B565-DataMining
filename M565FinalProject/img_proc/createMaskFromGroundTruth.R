@@ -1,15 +1,11 @@
-rm(list = ls())
-cat("\014")
 
-install.packages("png")
+# install.packages("png")
 library("png")
+# install.packages("rstudioapi")
+library(rstudioapi)
 
-outerFolder <- '/home/iu_ai_club/Documents/chuckjia/datamining/data/stage1_test_svm';
-groundTruthFile <- '/home/iu_ai_club/Documents/chuckjia/datamining/data/stage1_test_groundtruth/stage1_solution.csv';
-createTrueTestMask(outerFolder, groundTruthFile)
-
-createTrueTestMask <- function(outerFolder, groundTrueFile) {
-    dset <- read.csv(groundTrueFile)
+createMaskFromGroundTruth <- function(outerFolder, groundTruthFile, newFolder) {
+    dset <- read.csv(groundTruthFile)
     ndpt <- nrow(dset)
     
     prevFolder <- ''
@@ -17,7 +13,8 @@ createTrueTestMask <- function(outerFolder, groundTrueFile) {
     maskNo <- 1
     
     for (row in 1:ndpt) {
-        cat("Processing row no. ", row, " out of ", ndpt, " rows\n", sep = "")
+        if (row %% 100 == 0) 
+            cat("Processing row no. ", row, " out of ", ndpt, " rows\n", sep = "")
         
         dpt <- dset[row,]
         currFolder <- as.character(dpt$ImageId)
@@ -48,7 +45,7 @@ createTrueTestMask <- function(outerFolder, groundTrueFile) {
             }
         }
         
-        folderToWrite <- file.path(outerFolder, currFolder, "masks")
+        folderToWrite <- file.path(outerFolder, currFolder, newFolder)
         dir.create(folderToWrite)
         outputfilename <- file.path(folderToWrite, paste(maskNo, ".png", sep = ""))
         writePNG(imgmat, outputfilename)
