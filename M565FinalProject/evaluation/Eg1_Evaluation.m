@@ -1,3 +1,3 @@
-outerFolder = '/Users/chuckjia/Documents/Workspace/DataMining18/B565FinalProj/Packages/svm/stage1_train';
-thr = 0.3;
-accuracy = eval_accuracy(outerFolder, thr, 5, 'trueprediction_images', 'masks');
+outerFolder = '/Users/chuckjia/Documents/Workspace/DataStorage/B565/svm_results';
+thr = 0.5;
+accuracy = eval_accuracy(outerFolder, thr, 0, 'FinalPredict', 'masks');

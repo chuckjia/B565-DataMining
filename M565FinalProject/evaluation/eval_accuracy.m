@@ -26,6 +26,7 @@ numSubFolders = min(length(allSubFolders), fileNumLimit);
 accuracy = 0;
 for folderNo = 1:numSubFolders
     fprintf("Working on %d out of %d folders.\n", folderNo, numSubFolders);
+    fprintf("Folder = %s\n", allSubFolders{folderNo});
     
     trueFolder = fullfile(outerFolder, allSubFolders{folderNo}, trueFolderName);
     predFolder = fullfile(outerFolder, allSubFolders{folderNo}, predFolderName);
@@ -35,13 +36,12 @@ for folderNo = 1:numSubFolders
     
     accuracy = accuracy + accuracyCurr;
     
-    % fprintf("Folder = %s\n", allSubFolders{folderNo});
     fprintf("Accuracy = %f\n", accuracyCurr);
 end
 
 accuracy = accuracy / numSubFolders;
 
-fprintf("Completed. Mean accuracy = %f", accuracy);
+fprintf("Completed. Mean accuracy = %f\n", accuracy);
 
 end
 

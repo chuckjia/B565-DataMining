@@ -12,8 +12,13 @@ ntrue = length(imagesTrue.Files);
 npred = length(imagesPred.Files);
 result = repmat(-1, ntrue, 1);
 
+if npred > 300
+    return
+end
+
 % For each predicted mask, find its best match among the true masks
 for imgNo = 1:npred
+    fprintf("  - Working on prediction no %d out of %d\n", imgNo, npred);
     predMask = readimage(imagesPred, imgNo);
     
     maxMaskNo = 1;

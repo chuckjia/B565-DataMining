@@ -35,6 +35,23 @@ outerFolder = '/Users/chuckjia/Documents/Workspace/Git/B565-DataMining/M565Final
 result = evaluate(outerFolder, 0.3, 10);
 result
 
+%%
+
+clear; clc
+file1 = '/Users/chuckjia/Documents/Workspace/DataStorage/B565/Results/stage1_test_ver4/7bdb668e6127b7eafc837a883f0648002bd063c736f55a4f673e787250a3fb04/singleMask/single_mask.png';
+A = imread(file1);
+imshow(A)
+[nrow, ncol, ~] = size(A);
+
+file2 = '/Users/chuckjia/Documents/Workspace/DataStorage/B565/Results/stage1_test_ver4/7bdb668e6127b7eafc837a883f0648002bd063c736f55a4f673e787250a3fb04/pred_single_mask/47.png';
+B = imread(file2);
+%figure
+% imshow(B)
+C = imresize(B, [nrow ncol]);
+
+figure
+imshow(C)
+
 
 
 
