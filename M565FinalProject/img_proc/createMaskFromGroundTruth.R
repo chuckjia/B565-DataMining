@@ -4,6 +4,10 @@ library("png")
 # install.packages("rstudioapi")
 library(rstudioapi)
 
+# Input:: outerFolder: outmost folder for the test data
+#         groundTruthFile: the CSV file that encodes the final mask results
+#         newFolder: the name of the new subfolder you want to contain the ground truth masks
+
 createMaskFromGroundTruth <- function(outerFolder, groundTruthFile, newFolder) {
     dset <- read.csv(groundTruthFile)
     ndpt <- nrow(dset)

@@ -15,8 +15,6 @@ createMaskFromEncodedFile <- function(outerFolder, encodedFile, newFolder) {
     height = 0
     width = 0
     
-    cat("Here")
-    
     for (row in 1:ndpt) {
         if (row %% 100 == 0) 
             cat("Processing row no. ", row, " out of ", ndpt, " rows\n", sep = "")
