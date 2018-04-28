@@ -167,9 +167,9 @@ results = model.fit(X_train, Y_train, validation_split=0.1, batch_size=8, epochs
 
 
 # Predict on train, val and test
-model = load_model('model-dsbowl2018-1.h5', custom_objects={'mean_iou': mean_iou})
-preds_train = model.predict(X_train[:int(X_train.shape[0]*0.9)], verbose=1)
-preds_val = model.predict(X_train[int(X_train.shape[0]*0.9):], verbose=1)
+model = load_model('/Users/chuckjia/Downloads/model-dsbowl2018-1.h5', custom_objects={'mean_iou': mean_iou})
+# preds_train = model.predict(X_train[:int(X_train.shape[0]*0.9)], verbose=1)
+# preds_val = model.predict(X_train[int(X_train.shape[0]*0.9):], verbose=1)
 preds_test = model.predict(X_test, verbose=1)
 
 # Threshold predictions

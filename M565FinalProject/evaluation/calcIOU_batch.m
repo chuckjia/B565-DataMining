@@ -18,7 +18,7 @@ end
 
 % For each predicted mask, find its best match among the true masks
 for imgNo = 1:npred
-    fprintf("  - Working on prediction no %d out of %d\n", imgNo, npred);
+    % fprintf("  - Working on prediction no %d out of %d\n", imgNo, npred);
     predMask = readimage(imagesPred, imgNo);
     
     maxMaskNo = 1;

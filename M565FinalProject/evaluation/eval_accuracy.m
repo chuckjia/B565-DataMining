@@ -4,7 +4,7 @@ function accuracy = eval_accuracy(outerFolder, thr, fileNumLimit, predFolderName
 if nargin < 2
     fprintf("Not enough input!\n");
     return
-else
+end
 
 if nargin < 5
     trueFolderName = 'masks';
@@ -32,7 +32,10 @@ for folderNo = 1:numSubFolders
     predFolder = fullfile(outerFolder, allSubFolders{folderNo}, predFolderName);
     
     iouBatch = calcIOU_batch(predFolder, trueFolder);
-    accuracyCurr = nnz(iouBatch >= thr) / length(iouBatch);
+    numTP = nnz(iouBatch >= thr);
+    numFP = max(length(dir(predFolder)) - numTP - 3, 0);
+    num_TP_FP_FN = length(iouBatch) + numFP;
+    accuracyCurr = numTP / num_TP_FP_FN;
     
     accuracy = accuracy + accuracyCurr;
     
