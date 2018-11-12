@@ -1,6 +1,6 @@
 # B565 Data Mining (Spring 2018)
 
-This repository holds the code for the homework assignments from the course "B565 Data Mining" in Spring 2018.
+This repository holds my code for the homework assignments from the course "B565 Data Mining" in Spring 2018.
 
 * `B565_Documentations`: This folder contains documentations on the code, including instructions on how to run the code. It also holds my written solutions to the homework problems.
 
