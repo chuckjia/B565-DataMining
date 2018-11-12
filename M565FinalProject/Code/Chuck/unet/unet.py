@@ -3,6 +3,9 @@
 """
 Created on Thu Apr 26 16:48:57 2018
 
+This code is based on the python scripts by K. Amdal-SavikKeras, which can be found at https://www.kaggle.com/keegil/keras-u-net-starter-lb-0-277?scriptVersionId=2164855.
+Parameters have been tuned for better performance.
+
 @author: chuckjia
 """
 
@@ -32,16 +35,15 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras import backend as K
 
 import tensorflow as tf
-import keras
 
-config = tf.ConfigProto( device_count = {'GPU': 1, 'CPU': 1} ) 
+config = tf.ConfigProto( device_count = {'GPU': 0, 'CPU': 1} ) 
 sess = tf.Session(config=config) 
 keras.backend.set_session(sess)
 
 
 # Set some parameters
-IMG_WIDTH = 256
-IMG_HEIGHT = 256
+IMG_WIDTH = 128
+IMG_HEIGHT = 128
 IMG_CHANNELS = 3
 TRAIN_PATH = '/Users/chuckjia/Documents/Workspace/DataStorage/B565/stage1_train/'
 TEST_PATH = '/Users/chuckjia/Documents/Workspace/DataStorage/B565/stage1_test/'
@@ -94,6 +96,13 @@ for n, id_ in tqdm(enumerate(test_ids), total=len(test_ids)):
 
 print('Done!')
 
+# Check if training data looks all right
+ix = random.randint(0, len(train_ids))
+imshow(X_train[ix])
+plt.show()
+imshow(np.squeeze(Y_train[ix]))
+plt.show()
+
 
 # Define IoU metric
 def mean_iou(y_true, y_pred):
@@ -112,44 +121,44 @@ def mean_iou(y_true, y_pred):
 inputs = Input((IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS))
 s = Lambda(lambda x: x / 255) (inputs)
 
-c1 = Conv2D(16, (3, 3), activation='relu', padding='same') (s)
-c1 = Conv2D(16, (3, 3), activation='relu', padding='same') (c1)
+c1 = Conv2D(8, (3, 3), activation='relu', padding='same') (s)
+c1 = Conv2D(8, (3, 3), activation='relu', padding='same') (c1)
 p1 = MaxPooling2D((2, 2)) (c1)
 
-c2 = Conv2D(32, (3, 3), activation='relu', padding='same') (p1)
-c2 = Conv2D(32, (3, 3), activation='relu', padding='same') (c2)
+c2 = Conv2D(16, (3, 3), activation='relu', padding='same') (p1)
+c2 = Conv2D(16, (3, 3), activation='relu', padding='same') (c2)
 p2 = MaxPooling2D((2, 2)) (c2)
 
-c3 = Conv2D(64, (3, 3), activation='relu', padding='same') (p2)
-c3 = Conv2D(64, (3, 3), activation='relu', padding='same') (c3)
+c3 = Conv2D(32, (3, 3), activation='relu', padding='same') (p2)
+c3 = Conv2D(32, (3, 3), activation='relu', padding='same') (c3)
 p3 = MaxPooling2D((2, 2)) (c3)
 
-c4 = Conv2D(128, (3, 3), activation='relu', padding='same') (p3)
-c4 = Conv2D(128, (3, 3), activation='relu', padding='same') (c4)
+c4 = Conv2D(64, (3, 3), activation='relu', padding='same') (p3)
+c4 = Conv2D(64, (3, 3), activation='relu', padding='same') (c4)
 p4 = MaxPooling2D(pool_size=(2, 2)) (c4)
 
-c5 = Conv2D(256, (3, 3), activation='relu', padding='same') (p4)
-c5 = Conv2D(256, (3, 3), activation='relu', padding='same') (c5)
+c5 = Conv2D(128, (3, 3), activation='relu', padding='same') (p4)
+c5 = Conv2D(128, (3, 3), activation='relu', padding='same') (c5)
 
-u6 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same') (c5)
+u6 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same') (c5)
 u6 = concatenate([u6, c4])
-c6 = Conv2D(128, (3, 3), activation='relu', padding='same') (u6)
-c6 = Conv2D(128, (3, 3), activation='relu', padding='same') (c6)
+c6 = Conv2D(64, (3, 3), activation='relu', padding='same') (u6)
+c6 = Conv2D(64, (3, 3), activation='relu', padding='same') (c6)
 
-u7 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same') (c6)
+u7 = Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same') (c6)
 u7 = concatenate([u7, c3])
-c7 = Conv2D(64, (3, 3), activation='relu', padding='same') (u7)
-c7 = Conv2D(64, (3, 3), activation='relu', padding='same') (c7)
+c7 = Conv2D(32, (3, 3), activation='relu', padding='same') (u7)
+c7 = Conv2D(32, (3, 3), activation='relu', padding='same') (c7)
 
-u8 = Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same') (c7)
+u8 = Conv2DTranspose(16, (2, 2), strides=(2, 2), padding='same') (c7)
 u8 = concatenate([u8, c2])
-c8 = Conv2D(32, (3, 3), activation='relu', padding='same') (u8)
-c8 = Conv2D(32, (3, 3), activation='relu', padding='same') (c8)
+c8 = Conv2D(16, (3, 3), activation='relu', padding='same') (u8)
+c8 = Conv2D(16, (3, 3), activation='relu', padding='same') (c8)
 
-u9 = Conv2DTranspose(16, (2, 2), strides=(2, 2), padding='same') (c8)
+u9 = Conv2DTranspose(8, (2, 2), strides=(2, 2), padding='same') (c8)
 u9 = concatenate([u9, c1], axis=3)
-c9 = Conv2D(16, (3, 3), activation='relu', padding='same') (u9)
-c9 = Conv2D(16, (3, 3), activation='relu', padding='same') (c9)
+c9 = Conv2D(8, (3, 3), activation='relu', padding='same') (u9)
+c9 = Conv2D(8, (3, 3), activation='relu', padding='same') (c9)
 
 outputs = Conv2D(1, (1, 1), activation='sigmoid') (c9)
 
@@ -159,7 +168,7 @@ model.summary()
 
 
 # Fit model
-numEpoch = 2;
+numEpoch = 5;
 earlystopper = EarlyStopping(patience=5, verbose=1)
 checkpointer = ModelCheckpoint('model-dsbowl2018-1.h5', verbose=1, save_best_only=True)
 results = model.fit(X_train, Y_train, validation_split=0.1, batch_size=8, epochs=numEpoch, 
@@ -167,9 +176,9 @@ results = model.fit(X_train, Y_train, validation_split=0.1, batch_size=8, epochs
 
 
 # Predict on train, val and test
-model = load_model('/Users/chuckjia/Downloads/model-dsbowl2018-1.h5', custom_objects={'mean_iou': mean_iou})
-# preds_train = model.predict(X_train[:int(X_train.shape[0]*0.9)], verbose=1)
-# preds_val = model.predict(X_train[int(X_train.shape[0]*0.9):], verbose=1)
+model = load_model('model-dsbowl2018-1.h5', custom_objects={'mean_iou': mean_iou})
+preds_train = model.predict(X_train[:int(X_train.shape[0]*0.9)], verbose=1)
+preds_val = model.predict(X_train[int(X_train.shape[0]*0.9):], verbose=1)
 preds_test = model.predict(X_test, verbose=1)
 
 # Threshold predictions
@@ -183,10 +192,27 @@ for i in range(len(preds_test)):
     preds_test_upsampled.append(resize(np.squeeze(preds_test[i]), 
                                        (sizes_test[i][0], sizes_test[i][1]), 
                                        mode='constant', preserve_range=True))
+    
+    
+# Perform a sanity check on some random training samples
+ix = random.randint(0, len(preds_train_t))
+imshow(X_train[ix])
+plt.show()
+imshow(np.squeeze(Y_train[ix]))
+plt.show()
+imshow(np.squeeze(preds_train_t[ix]))
+plt.show()
 
 import imageio
 
-outerFolder = '/home/iu_ai_club/Documents/chuckjia/datamining/data/stage1_test'
+imgNo = 3
+plt.imshow(np.squeeze(preds_test_t[imgNo]))
+plt.imshow(np.squeeze(X_test[imgNo]))
+filename = '/Users/chuckjia/Documents/Workspace/Git/B565-DataMining/M565FinalProject/unet/this.png'
+plt.savefig(filename)
+
+
+outerFolder = '/Users/chuckjia/Documents/Workspace/DataStorage/B565/stage1_test'
 for imgNo in range(len(X_test_id)):
     imgFolder = os.path.join(outerFolder, X_test_id[imgNo], 'pred_single_mask')
     if not os.path.exists(imgFolder):
@@ -195,45 +221,4 @@ for imgNo in range(len(X_test_id)):
     imageio.imsave(filename, 255 * np.squeeze(preds_test_t[imgNo]))
 
 
-
-
-
-
-
-# Run-length encoding stolen from https://www.kaggle.com/rakhlin/fast-run-length-encoding-python
-def rle_encoding(x):
-    dots = np.where(x.T.flatten() == 1)[0]
-    run_lengths = []
-    prev = -2
-    for b in dots:
-        if (b>prev+1): run_lengths.extend((b + 1, 0))
-        run_lengths[-1] += 1
-        prev = b
-    return run_lengths
-
-def prob_to_rles(x, cutoff=0.5):
-    lab_img = label(x > cutoff)
-    for i in range(1, lab_img.max() + 1):
-        yield rle_encoding(lab_img == i)
-        
-        
-new_test_ids = []
-rles = []
-for n, id_ in enumerate(test_ids):
-    rle = list(prob_to_rles(preds_test_upsampled[n]))
-    rles.extend(rle)
-    new_test_ids.extend([id_] * len(rle))
-    
-    
-# Create submission DataFrame
-sub = pd.DataFrame()
-sub['ImageId'] = new_test_ids
-sub['EncodedPixels'] = pd.Series(rles).apply(lambda x: ' '.join(str(y) for y in x))
-sub.to_csv('sub-dsbowl2018-1.csv', index=False)
-    
-    
-    
-    
-    
-    
 
