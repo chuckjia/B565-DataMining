@@ -8,4 +8,4 @@ This repository holds the code for the homework assignments from the course "B56
 
 * Other folders are the code for specific problems. For example, the folder `B565HW2Prob3` has the code files for Problem 3 in Homework 2. There are in total 5 homework assignments and 1 final projects.
 
-To run the code in this repository, it is highly recommended to check out the corresponding files in `B565HW_Documentations` and `B565HW_ProblemDescriptions`.
+To run the code in this repository, it is highly recommended to check out the corresponding files in `B565_Documentations` and `B565_ProblemDescriptions`.
